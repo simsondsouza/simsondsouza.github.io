@@ -1,0 +1,38 @@
+{
+  "name": "portfolio",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -b portfolio -d dist",
+    "start": "react-scripts start"
+  },
+  "homepage": "https://simsondsouza.github.io",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "framer-motion": "^7.3.5",
+    "gh-pages": "^6.3.0",
+    "katex": "^0.16.19",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^4.12.0",
+    "react-latex": "^1.2.0",
+    "react-lottie-player": "1.5.4",
+    "react-router-dom": "^7.1.1",
+    "smoothscroll-polyfill": "^0.4.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@vitejs/plugin-react": "^2.2.0",
+    "autoprefixer": "^10.4.8",
+    "postcss": "^8.4.16",
+    "tailwindcss": "^3.1.8",
+    "vite": "^3.1.0"
+  }
+}
+
