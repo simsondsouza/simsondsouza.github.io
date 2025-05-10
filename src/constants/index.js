@@ -109,7 +109,7 @@ import matlabicon from '../assets/matlab_logo.png';
 import scholarshipicon from '../assets/scholarship_logo.png';
 import excellenceawardicon from '../assets/excellenceaward_logo.jpeg';
 
-export const resumeLink = "https://drive.google.com/file/d/15YrpF53miM4Af0YQmFHOsKN7UfAOy1ij/view?usp=sharing";
+export const resumeLink = "https://drive.google.com/file/d/1aABAWxspNzU57ygVRwhb17_OOEmmLpH3/view?usp=sharing";
 export const repoLink = "https://github.com/simsondsouza";
 
 export const callToAction = "https://www.linkedin.com/in/simsondsouza";
