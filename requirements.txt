@@ -1,0 +1,13 @@
+# System dependencies for simsondsouza.github.io portfolio
+# Run: sudo apt install -y $(cat requirements.txt)
+
+# Essential system packages
+curl
+wget
+git
+build-essential
+python3
+python3-pip
+
+# Node.js and npm will be installed by setup.sh script
+# These are the minimum system requirements for the portfolio project
