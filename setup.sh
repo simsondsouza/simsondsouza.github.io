@@ -103,9 +103,11 @@ fi
 
 # Check if yarn is preferred (optional)
 if [[ -f "yarn.lock" ]]; then
-    print_status "yarn.lock found. Installing yarn..."
+    print_status "yarn.lock found. Checking for yarn..."
     if ! command -v yarn &> /dev/null; then
-        npm install -g yarn
+        print_status "Yarn not found. Installing yarn locally..."
+        # Install yarn locally to avoid permission issues
+        npm install -g yarn --location=global || npm install -g yarn
     fi
     print_status "Installing dependencies with yarn..."
     if yarn install; then

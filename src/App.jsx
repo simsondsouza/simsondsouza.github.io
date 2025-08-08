@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Import Router
+import { HashRouter as Router, Routes, Route } from "react-router-dom"; // Changed to HashRouter for GitHub Pages
 
 import styles from "./style";
 import {
