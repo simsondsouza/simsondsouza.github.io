@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { HashRouter as Router, Routes, Route } from "react-router-dom"; // Changed to HashRouter for GitHub Pages
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import styles from "./style";
 import {
@@ -8,29 +8,68 @@ import {
   Hero,
   Education,
   SkillsAndExperience,
-  /* ExtraCurricular, */ // Commented out ExtraCurricular
   Footer,
-  /* OpenSource, */ // Commented out OpenSource
   Projects,
   BlogPosts,
   Loading,
   Achievements,
 } from "./components";
-import ProjectDetail from "./components/ProjectDetail"; // Add this import for the project detail page
+import ProjectDetail from "./components/ProjectDetail";
+import { useScrollToTop } from "./lib/useScrollToTop";
 
 const App = () => {
   const [isLoading, setIsLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
 
   React.useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1200);
+
+    return () => clearTimeout(timer);
   }, []);
+
+  if (error) {
+    return (
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 w-full h-screen flex items-center justify-center text-white">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
+          <p className="text-gray-300">{error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const MainContent = () => {
+    useScrollToTop(true);
+    
+    return (
+      <>
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+          <Hero />
+        </div>
+
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+          <SkillsAndExperience />
+          <Education />
+        </div>
+        
+        <Achievements />
+        
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+          <Projects />
+          <BlogPosts enabled={false} />
+        </div>
+        
+        <Footer />
+      </>
+    );
+  };
 
   return (
     <Router>
-      <div className="bg-primary w-full overflow-hidden">
-        <AnimatePresence>
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 w-full overflow-hidden min-h-screen">
+        <AnimatePresence mode="wait">
           {isLoading ? (
             <Loading key="loading" />
           ) : (
@@ -40,50 +79,14 @@ const App = () => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.75, delay: 0.5 }}
             >
-              <div className={`${styles.paddingX} ${styles.flexCenter}`}>
-                <div className={`${styles.boxWidth}`}>
-                  <Navbar />
-                </div>
+              <div className="container mx-auto px-6">
+                <Navbar />
               </div>
 
-              {/* Define Routes here */}
               <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <>
-                      <div className={`bg-primary ${styles.flexStart}`}>
-                        <div className={`${styles.boxWidth}`}>
-                          <Hero />
-                        </div>
-                      </div>
-
-                      <div
-                        className={`bg-primary ${styles.flexCenter} ${styles.paddingX}`}
-                      >
-                        <div className={`${styles.boxWidth}`}>
-                          <SkillsAndExperience />
-                          <Education />
-                        </div>
-                      </div>
-                      <Achievements />
-                      <div
-                        className={`bg-primary ${styles.flexCenter} ${styles.paddingX}`}
-                      >
-                        <div className={`${styles.boxWidth}`}>
-                          <Projects /> {/* This will show the projects */}
-                          <BlogPosts enabled={false} />
-                          {/* <OpenSource /> */} {/* Commented out OpenSource */}
-                          {/* <ExtraCurricular /> */} {/* Commented out ExtraCurricular */}
-                        </div>
-                      </div>
-                      <Footer />
-                    </>
-                  }
-                />
-
-                {/* ProjectDetail route */}
+                <Route path="/" element={<MainContent />} />
                 <Route path="/projects/:id" element={<ProjectDetail />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </motion.section>
           )}

@@ -116,6 +116,10 @@ export const callToAction = "https://www.linkedin.com/in/simsondsouza";
 
 export const navLinks = [
   {
+    id: "home",
+    title: "Home",
+  },
+  {
     id: "skills",
     title: "Skills & Experience",
   },

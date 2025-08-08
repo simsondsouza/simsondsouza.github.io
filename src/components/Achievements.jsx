@@ -4,6 +4,7 @@ import { achievements } from "../constants";
 import { AiFillGithub } from "react-icons/ai";
 import { FaYoutube } from "react-icons/fa";
 import { TiNews } from "react-icons/ti";
+import { motion } from "framer-motion";
 import styles from "../style";
 
 const Achievements = () => {
@@ -33,7 +34,6 @@ const Achievements = () => {
 
   const handleHorizontalScroll = (event) => {
     if (containerRef.current) {
-      // Only handle horizontal scroll using deltaX
       containerRef.current.scrollLeft += event.deltaX;
     }
   };
@@ -67,47 +67,57 @@ const Achievements = () => {
 
   return (
     <section
-      className="bg-primary overflow-hidden text-white mt-5 md:mt-10 relative"
+      className="section-padding bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden"
       id="achievements"
     >
-      <div className={`bg-primary ${styles.flexCenter} ${styles.paddingX}`}>
-        <div className={`${styles.boxWidth}`}>
-          <h1 className="flex-1 font-poppins font-semibold ss:text-[55px] text-[45px] text-white ss:leading-[80px] leading-[80px]">
+      {/* Background Elements */}
+      <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-float"></div>
+      <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+      
+      <div className="container mx-auto px-6 relative z-10">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <h2 className="section-title">
             Achievements
-          </h1>
+          </h2>
+          <p className="section-subtitle">
+            Recognition and awards for outstanding performance in academics and professional work.
+          </p>
         </div>
-      </div>
-      <div className="absolute z-[0] w-[60%] h-[60%] -left-[50%] rounded-full blue__gradient bottom-40" />
-      <div className={`bg-primary ${styles.flexCenter} ${styles.paddingX}`}>
-        <div className={`${styles.boxWidth} overflow-hidden`}>
-          <div className="my-20">
-            <div
-              ref={containerRef}
-              className="flex overflow-x-auto scrollbar-hide"
-              style={{
-                scrollBehavior: "smooth",
-              }}
+
+        <div className="relative">
+          <div
+            ref={containerRef}
+            className="flex overflow-x-auto scrollbar-hide gap-6 pb-8"
+            style={{
+              scrollBehavior: "smooth",
+            }}
+          >
+            {achievements.map((achievement, index) => (
+              <AchievementCard key={index} {...achievement} index={index} />
+            ))}
+          </div>
+          
+          {/* Navigation Buttons */}
+          <div className="flex justify-center mt-8 space-x-4">
+            <button
+              onClick={handlePrev}
+              disabled={isPrevDisabled}
+              className="p-3 bg-glass border border-white/10 rounded-full disabled:opacity-50 hover:bg-glass-hover transition-all duration-300 shadow-lg hover:shadow-xl"
             >
-              {achievements.map((achievement, index) => (
-                <AchievementCard key={index} {...achievement} />
-              ))}
-            </div>
-            <div className="flex justify-end mb-4">
-              <button
-                onClick={handlePrev}
-                disabled={isPrevDisabled}
-                className="p-2 bg-gray-700 rounded-full disabled:opacity-50 mx-2"
-              >
-                &lt;
-              </button>
-              <button
-                onClick={handleNext}
-                disabled={isNextDisabled}
-                className="p-2 bg-gray-700 rounded-full disabled:opacity-50 mx-2"
-              >
-                &gt;
-              </button>
-            </div>
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={isNextDisabled}
+              className="p-3 bg-glass border border-white/10 rounded-full disabled:opacity-50 hover:bg-glass-hover transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -117,78 +127,85 @@ const Achievements = () => {
 
 const AchievementCard = (props) => {
   return (
-    <div className="achievement-card flex-shrink-0 flex flex-col md:w-[400px] w-[320px] justify-around px-6 py-4 rounded-[20px] md:mr-10 mr-6 my-5 transition-colors duration-300 transform border hover:border-transparent dark:border-gray-700 dark:hover:border-transparent">
-      <img
-        src={props.icon}
-        alt={props.event}
-        className="w-[45px] h-[45px] rounded-full mt-1 mb-1"
-      />
-      <div className="flex flex-col justify-end mt-4 mb-1">
-        <p className="font-poppins font-normal text-xl text-white leading-[24px] mb-2 text-justify">
-          {props.event}
-        </p>
-        <p className="font-poppins italic font-normal text-lg text-gradient mb-3 text-justify">
-          {props.position}
-        </p>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: props.index * 0.1 }}
+      className="achievement-card min-w-[300px] max-w-[400px] bg-glass border border-white/10 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+    >
+      <div className="flex items-center mb-4">
+        <div className="relative">
+          <img
+            src={props.icon}
+            alt={props.event}
+            className="w-12 h-12 rounded-full border-2 border-white/20 shadow-lg"
+          />
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </div>
+        <div className="ml-4">
+          <h3 className="text-lg font-semibold text-white mb-1">
+            {props.event}
+          </h3>
+          {props.position && (
+            <p className="text-blue-400 font-medium">
+              {props.position}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="space-y-3">
         {props.content1 && (
-          <p className="font-poppins font-normal text-dimWhite text-sm mb-1 text-justify">
-            🚀 {props.content1}
+          <p className="text-gray-300 text-sm leading-relaxed">
+            {props.content1}
           </p>
         )}
         {props.content2 && (
-          <p className="font-poppins font-normal text-dimWhite text-sm mb-1 text-justify">
-            ⚡ {props.content2}
+          <p className="text-gray-300 text-sm leading-relaxed">
+            {props.content2}
           </p>
         )}
         {props.content3 && (
-          <p className="font-poppins font-normal text-dimWhite text-sm mb-4 text-justify">
-            🔥 {props.content3}
+          <p className="text-gray-300 text-sm leading-relaxed">
+            {props.content3}
           </p>
         )}
       </div>
-      <div className="flex flex-row mb-2 font-poppins font-normal text-dimWhite">
-        {props.article && (
+
+      {/* Action Links */}
+      <div className="flex gap-3 mt-6">
+        {props.github && (
           <a
-            className="inline-flex items-center mr-2 hover:text-teal-200"
-            href={props.article}
+            href={props.github}
             target="_blank"
             rel="noopener noreferrer"
+            className="p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-xl"
           >
-            <TiNews size="1.5rem" className="inline" />
+            <AiFillGithub size={20} />
           </a>
         )}
         {props.youtube && (
           <a
-            className="inline-flex items-center mr-2 hover:text-teal-200"
             href={props.youtube}
             target="_blank"
             rel="noopener noreferrer"
+            className="p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-xl"
           >
-            <FaYoutube size="1.5rem" className="inline" />
+            <FaYoutube size={20} />
           </a>
         )}
-        {props.github && (
+        {props.article && (
           <a
-            className="inline-flex items-center mr-2 hover:text-teal-200"
-            href={props.github}
+            href={props.article}
             target="_blank"
             rel="noopener noreferrer"
+            className="p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-xl"
           >
-            <AiFillGithub size="1.5rem" className="inline" />
-          </a>
-        )}
-        {props.project && (
-          <a
-            className="inline-flex items-center hover:text-teal-200"
-            href={props.project}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <BsLink45Deg size="1.5rem" className="inline" />
+            <TiNews size={20} />
           </a>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

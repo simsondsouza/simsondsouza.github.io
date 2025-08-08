@@ -4,62 +4,58 @@ import { socialMedia, aboutMe } from "../constants";
 import { profilePic } from "../assets";
 import { layout } from "../style";
 import { resumeLink, repoLink } from "../constants";
-import { AiFillGithub } from "react-icons/ai";
+import { AiFillGithub, AiOutlineDownload } from "react-icons/ai";
 
 const Footer = () => (
-  <footer id="contactMe" className="bg-gray-900 sm:px-16 px-6">
-    <div
-      className={`${layout.sectionReverse} xl:max-w-[1280px] w-full mx-auto gap-y-4 `}
-    >
-      <div className={` ${layout.sectionInfo}`}>
-        <h2 className="text-xl font-bold text-white font-poppins dark:text-white hover:text-gray-700 dark:hover:text-gray-300">
-          {aboutMe.name}
-        </h2>
-        <p
-          className={`font-poppins font-normal text-white text-[16px] leading-[30.8px] max-w-[470px] mt-5`}
-        >
-        {aboutMe.tagLine}
-        </p>
-        <div className="flex flex-row mt-4">
-          {socialMedia.map((social, index) => (
-            <a
-              href={social.link}
-              target="_blank"
-              key={social.id}
-              index={index}
-              className="text-white mr-5 text-[25px] hover:text-teal-200"
-            >
-              {React.createElement(social.icon)}
+  <footer id="contactMe" className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-t border-white/10">
+    <div className="container mx-auto px-6 py-16">
+      <div className="grid lg:grid-cols-2 gap-12 items-center">
+        {/* Content Section */}
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-3xl font-bold text-white font-poppins mb-4">
+              {aboutMe.name}
+            </h2>
+            <p className="font-poppins font-normal text-gray-300 text-[16px] leading-[30.8px] max-w-[470px]">
+              {aboutMe.tagLine}
+            </p>
+          </div>
+          {/* Social Media */}
+          <div className="flex flex-row space-x-4">
+            {socialMedia.map((social) => (
+              <a
+                href={social.link}
+                target="_blank"
+                key={social.id}
+                className="p-3 rounded-xl bg-glass border border-white/10 text-white text-[25px] hover:text-blue-400 hover:bg-glass-hover transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-xl"
+              >
+                {React.createElement(social.icon)}
+              </a>
+            ))}
+          </div>
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <a href={resumeLink} target="_blank" rel="noopener noreferrer">
+              <button className="btn-primary inline-flex items-center justify-center px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                <AiOutlineDownload className="mr-2" />
+                View Resume
+              </button>
             </a>
-          ))}
+          </div>
         </div>
-
-        <div className="grid grid-cols-2">
-          {/* styles is a prop */}
-          <a href={resumeLink} target="_blank">
-            <Button styles="mt-10 mr-3 inline-flex items-center justify-center" text="Resume" icon={AiFillGithub} />
-          </a>
-          {/* <a href={repoLink} target="_blank">
-            <Button
-              styles="mt-10 inline-flex items-center justify-center"
-              text="Star"
-              icon={AiFillGithub}
-            />
-          </a> */}
+        {/* Profile Image */}
+        <div className="flex justify-center lg:justify-end">
+          <div className="relative">
+            <img src={profilePic} alt="profile" className="w-[220px] h-[220px] object-cover rounded-2xl border border-white/20 shadow-2xl" />
+            <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl blur-2xl"></div>
+          </div>
         </div>
       </div>
-
-      <div className="md:ml-auto mt-10 md:mt-0">
-        <img
-          src={profilePic}
-          alt="Simson D'Souza"
-          className="w-[150px] h-[200px] border-2 border-teal-200 relative z-[5] rounded-full"
-        />
+      {/* Bottom bar */}
+      <div className="mt-12 border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between text-gray-400 text-sm">
+        <p>© {new Date().getFullYear()} {aboutMe.name}. All rights reserved.</p>
+        <p>Built with React, Vite, Tailwind CSS, and Framer Motion.</p>
       </div>
-    </div>
-    <div className="text-center font-poppins font-normal text-dimWhite text-xs sm:text-sm pb-4">
-      <p>
-      </p>
     </div>
   </footer>
 );
