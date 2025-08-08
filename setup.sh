@@ -105,16 +105,30 @@ fi
 if [[ -f "yarn.lock" ]]; then
     print_status "yarn.lock found. Checking for yarn..."
     if ! command -v yarn &> /dev/null; then
-        print_status "Yarn not found. Installing yarn locally..."
-        # Install yarn locally to avoid permission issues
-        npm install -g yarn --location=global || npm install -g yarn
+        print_status "Yarn not found. Installing yarn using npm..."
+        # Try to install yarn locally first, then globally if needed
+        if npm install -g yarn --location=global 2>/dev/null; then
+            print_success "Yarn installed successfully"
+        else
+            print_warning "Global yarn installation failed. Using npm instead..."
+            print_status "Installing dependencies with npm..."
+            if npm install --legacy-peer-deps; then
+                print_success "Dependencies installed successfully with npm"
+            else
+                print_warning "Some dependencies had conflicts, trying with force..."
+                npm install --legacy-peer-deps --force
+            fi
+        fi
     fi
-    print_status "Installing dependencies with yarn..."
-    if yarn install; then
-        print_success "Dependencies installed successfully with yarn"
-    else
-        print_warning "Some dependencies had conflicts with yarn, trying with legacy peer deps..."
-        yarn install --ignore-engines
+    
+    if command -v yarn &> /dev/null; then
+        print_status "Installing dependencies with yarn..."
+        if yarn install; then
+            print_success "Dependencies installed successfully with yarn"
+        else
+            print_warning "Some dependencies had conflicts with yarn, trying with legacy peer deps..."
+            yarn install --ignore-engines
+        fi
     fi
 else
     print_status "Installing dependencies with npm..."
