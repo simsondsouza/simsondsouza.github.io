@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -b portfolio -d dist",
+    "deploy": "gh-pages -d dist",
     "start": "react-scripts start"
   },
   "homepage": "https://simsondsouza.github.io",
