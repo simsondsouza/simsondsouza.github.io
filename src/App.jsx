@@ -13,6 +13,7 @@ import {
   Loading,
   Achievements,
   Publications,
+  News,
 } from "./components";
 import ProjectDetail from "./components/ProjectDetail";
 import ProjectsPage from "./pages/ProjectsPage";
@@ -53,6 +54,7 @@ const App = () => {
         </div>
 
         <div className="bg-slate-950">
+          <News />
           <SkillsAndExperience />
           <Education />
         </div>

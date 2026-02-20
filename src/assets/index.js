@@ -1,4 +1,5 @@
 import profilePic from "./profile_pic.jpg";
+import aim_logo from "./aim_logo.jpg";
 import send from "./Send.svg";
 import shield from "./Shield.svg";
 import star from "./Star.svg";
@@ -42,6 +43,7 @@ import vas_lbph from "./vas_lbph.png";
 import vas_lbph_histogram from "./vas_lbph_histogram.png";
 
 export {
+  aim_logo,
   send,
   shield,
   star,

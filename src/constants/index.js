@@ -1,4 +1,5 @@
 import {
+  aim_logo,
   cmu,
   hits,
   icon,
@@ -255,6 +256,25 @@ export const skills = [
 
 // Add your current/past professional work experience here
 export const experiences = [
+  {
+    organisation: "AIM Intelligent Machines, USA",
+    logo: aim_logo,
+    link: "https://aim.vision/",
+    positions: [
+      {
+        title: "Machine Learning Engineer Intern",
+        duration: "May 2025 - August 2025",
+        content: [
+          { text: "LiDAR Calibration Health Monitor", type: "header" },
+          { text: "Real-time monitoring system to detect calibration issues using quantitative metrics.", type: "bullet", link: "" },
+          { text: "Eliminates reliance on manual inspection and improves reliability.", type: "bullet", link: "" },
+          { text: "LiDAR Calibration Validation", type: "header" },
+          { text: "Offline Replay-based SLAM framework that evaluates LiDAR calibration with metrics.", type: "bullet", link: "" },
+          { text: "Provides improved mount offsets with better map quality.", type: "bullet", link: "" },
+        ],
+      },
+    ],
+  },
   {
     organisation: "Void Robotics, USA",
     logo: voidrobotics,
@@ -1914,7 +1934,7 @@ export const aboutMe = {
     name: "Simson D'Souza",
     githubUsername: 'SimsonDsouza',
     tagLine: "CMU'26 MRSD",
-    intro: "a Robotics Engineer passionate about Robotics, Computer Vision and AI. I  am dedicated to empowering innovation that makes a difference in people's lives. Every project is a chance to turn complex challenges into solutions that shape the future."
+    intro: "a Robotics Engineer passionate about Reinforcement and Imitation Learning, Computer Vision, SLAM and Deep Learning. I am dedicated to empowering innovation that makes a difference in people's lives. Every project is a chance to turn complex challenges into solutions that shape the future."
 }
 
 // The maximum number of PRs to be displayed in the Open Source Contributions section.
