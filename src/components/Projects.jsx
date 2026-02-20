@@ -12,7 +12,7 @@ const Project = (props) => {
 
   return (
     <motion.div
-      className="group relative overflow-hidden rounded-2xl bg-glass border border-white/10 hover:border-blue-500/30 transition-all duration-500 hover:scale-[1.02] shadow-lg hover:shadow-2xl"
+      className="group relative overflow-hidden rounded-2xl bg-white/5 border border-white/10 hover:border-teal-500/30 transition-all duration-300 hover:scale-[1.02]"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
@@ -32,10 +32,10 @@ const Project = (props) => {
         <div className="absolute bottom-4 left-4 right-4">
           <div className="flex flex-wrap gap-2">
             {props.stack.slice(0, 3).map((tech, index) => (
-              <span
-                key={index}
-                className="px-2 py-1 bg-blue-500/20 backdrop-blur-sm text-blue-300 text-xs rounded-full border border-blue-500/30 shadow-lg"
-              >
+          <span
+            key={index}
+            className="px-2 py-1 bg-teal-500/20 backdrop-blur-sm text-teal-300 text-xs rounded-full border border-teal-500/30"
+          >
                 {tech.name}
               </span>
             ))}
@@ -53,7 +53,7 @@ const Project = (props) => {
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300">
+            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-teal-400 transition-colors duration-300">
               {props.title}
             </h3>
             <p className="text-sm text-gray-400 mb-2">{props.duration}</p>
@@ -77,7 +77,7 @@ const Project = (props) => {
                 className="group/tech relative"
                 title={tech.name}
               >
-                <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center transition-all duration-300 group-hover/tech:bg-blue-500/20 group-hover/tech:border-blue-500/30 group-hover/tech:scale-110 shadow-lg hover:shadow-xl">
+                <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center transition-all duration-300 group-hover/tech:bg-teal-500/20 group-hover/tech:border-teal-500/30 group-hover/tech:scale-110">
                   {typeof tech.icon === "string" ? (
                     <img
                       src={tech.icon}
@@ -125,15 +125,13 @@ const Project = (props) => {
           
           <Link
             to={`/projects/${props.id}`}
-            className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+            className="px-4 py-2 bg-teal-500 hover:bg-teal-400 text-slate-900 text-sm font-medium rounded-lg transition-colors"
           >
             View Details
           </Link>
         </div>
       </div>
 
-      {/* Hover Effect Border */}
-      <div className="absolute inset-0 rounded-2xl border-2 border-transparent bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-20 transition-opacity duration-500 -z-10"></div>
     </motion.div>
   );
 };
@@ -161,9 +159,12 @@ const Projects = () => {
 
         {/* View All Projects CTA */}
         <div className="text-center mt-16">
-          <button className="btn-secondary text-lg px-8 py-4 rounded-xl hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-xl">
+          <Link
+            to="/projects"
+            className="inline-block px-8 py-4 rounded-lg border border-white/20 text-white hover:bg-teal-500/20 hover:border-teal-500/30 font-semibold transition-colors"
+          >
             View All Projects
-          </button>
+          </Link>
         </div>
       </div>
     </section>

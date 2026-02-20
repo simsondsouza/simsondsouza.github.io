@@ -1,125 +1,85 @@
-import styles from "../style";
 import LetsConnect from "./LetsConnect";
-import Lottie from "react-lottie-player";
-import animationData from "../lotties/person-coding.json";
 import { aboutMe, resumeLink } from "../constants";
 import { scrollToSection } from "../lib/helperFunctions";
-
-// lottie config
-const defaultOptions = {
-  loop: true,
-  play: true,
-  animationData: animationData,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
+import { profilePic } from "../assets";
 
 const Hero = () => {
-  const handleViewWork = () => {
-    scrollToSection("projects");
-  };
-
-  const handleViewCV = () => {
-    // Redirect to Google Drive link
-    window.open(resumeLink, '_blank');
-  };
+  const handleViewWork = () => scrollToSection("projects");
+  const handleViewCV = () => window.open(resumeLink, "_blank");
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
-      <div className="absolute inset-0 opacity-20" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-      }}></div>
-      
-      {/* Floating Elements */}
-      <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-float"></div>
-      <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl animate-pulse"></div>
+    <section id="home" className="relative min-h-screen flex items-center px-6 sm:px-10 pt-24 pb-20">
+      <div className="w-full max-w-6xl mx-auto">
 
-      <div className="relative z-10 container mx-auto px-6 py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Hero Content */}
-          <div className="space-y-8 animate-fade-in">
-            {/* Greeting */}
-            <div className="space-y-4">
-              <div className="inline-flex items-center space-x-2 bg-glass px-4 py-2 rounded-full border border-white/10">
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                <span className="text-sm font-medium text-gray-300">Available for opportunities</span>
-              </div>
-              
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
-                <span className="text-white">Hi there! I'm</span>
-                <br />
-                <span className="text-gradient bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                  {aboutMe.name}
-                </span>
-              </h1>
-            </div>
+        {/* Two-column row: text left, photo right */}
+        <div className="flex flex-col-reverse md:flex-row items-center gap-10 md:gap-16">
 
-            {/* Description */}
-            <p className="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-2xl">
+          {/* Left: Text content */}
+          <div className="flex-1 space-y-5">
+            <span className="inline-block px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-sm text-teal-400 font-medium">
+              Available for opportunities
+            </span>
+
+            <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-bold text-white leading-tight">
+              Hi, I'm{" "}
+              <span className="text-teal-400">{aboutMe.name}</span>
+            </h1>
+
+            <p className="text-base sm:text-lg text-gray-400 leading-relaxed max-w-lg">
               {aboutMe.intro}
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button 
+            <div className="flex flex-wrap gap-4 pt-1">
+              <button
                 onClick={handleViewWork}
-                className="btn-primary text-lg px-8 py-4 rounded-xl hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-xl"
+                className="px-7 py-3 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-900 font-semibold transition-colors duration-200"
               >
                 View My Work
               </button>
-              <button 
+              <button
                 onClick={handleViewCV}
-                className="btn-secondary text-lg px-8 py-4 rounded-xl hover:scale-105 transition-transform duration-300"
+                className="px-7 py-3 rounded-lg border border-white/20 text-white hover:bg-white/10 font-semibold transition-colors duration-200"
               >
                 View Resume
               </button>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-8 pt-8">
-              <div className="text-center group">
-                <div className="text-3xl font-bold text-blue-400 group-hover:text-blue-300 transition-colors duration-300">1+</div>
-                <div className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-300">Years Experience</div>
+            <div className="flex gap-12 pt-2">
+              <div>
+                <div className="text-2xl font-bold text-teal-400">1+</div>
+                <div className="text-sm text-gray-500">Years Experience</div>
               </div>
-              <div className="text-center group">
-                <div className="text-3xl font-bold text-purple-400 group-hover:text-purple-300 transition-colors duration-300">4+</div>
-                <div className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-300">Projects Completed</div>
+              <div>
+                <div className="text-2xl font-bold text-teal-400">4+</div>
+                <div className="text-sm text-gray-500">Projects</div>
               </div>
             </div>
           </div>
 
-          {/* Hero Visual */}
-          <div className="relative flex justify-center items-center">
-            <div className="relative">
-              {/* Main Animation */}
-              <div className="relative z-10 animate-scale-in">
-                <Lottie {...defaultOptions} className="w-full h-auto max-w-lg" />
-              </div>
-              
-              {/* Decorative Elements */}
-              <div className="absolute -top-10 -right-10 w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full opacity-20 animate-bounce-gentle"></div>
-              <div className="absolute -bottom-10 -left-10 w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full opacity-20 animate-bounce-gentle" style={{ animationDelay: '1s' }}></div>
-              
-              {/* Glowing Ring */}
-              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+          {/* Right: Profile photo — square with smooth rounded corners */}
+          <div className="flex-shrink-0 flex justify-center">
+            <div className="w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 rounded-2xl overflow-hidden border-2 border-teal-500/40 shadow-2xl shadow-teal-500/20 ring-1 ring-white/10">
+              <img
+                src={profilePic}
+                alt={aboutMe.name}
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
+
         </div>
 
-        {/* Social Links - Mobile */}
-        <div className="lg:hidden flex justify-center mt-12">
+        {/* LetsConnect — centered below the two-column row */}
+        <div className="flex justify-center mt-12">
           <LetsConnect />
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-gray-400 rounded-full mt-2 animate-pulse"></div>
-          </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce">
+        <div className="w-6 h-10 border-2 border-gray-600 rounded-full flex justify-center pt-2">
+          <div className="w-1 h-2 bg-gray-600 rounded-full" />
         </div>
       </div>
     </section>
@@ -127,4 +87,3 @@ const Hero = () => {
 };
 
 export default Hero;
-
