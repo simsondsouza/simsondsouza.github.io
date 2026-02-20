@@ -13,6 +13,10 @@ const Navbar = () => {
   const location = useLocation();
 
   useEffect(() => {
+    if (location.pathname !== "/") setActiveSection(location.pathname);
+  }, [location.pathname]);
+
+  useEffect(() => {
     const handleScroll = () => {
       const isScrolled = window.scrollY > 50;
       setScrolled(isScrolled);
@@ -46,15 +50,19 @@ const Navbar = () => {
     requestAnimationFrame(tryScroll);
   };
 
-  const handleNavClick = (sectionId) => {
+  const handleNavClick = (sectionId, route) => {
     setActiveSection(sectionId);
+    setToggle(false);
+    if (route) {
+      navigate(route);
+      return;
+    }
     if (location.pathname !== "/") {
       navigate("/");
       waitAndScroll(sectionId);
     } else {
       scrollToSection(sectionId);
     }
-    setToggle(false);
   };
 
   return (
@@ -75,8 +83,8 @@ const Navbar = () => {
             whileTap={{ scale: 0.95 }}
           >
             <button
-              onClick={() => handleNavClick("home")}
-              className="text-2xl font-bold text-gradient hover:opacity-80 transition-opacity duration-300"
+              onClick={() => handleNavClick("home", null)}
+              className="text-2xl font-bold text-teal-400 hover:text-teal-300 transition-colors"
             >
               Portfolio
             </button>
@@ -92,20 +100,19 @@ const Navbar = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
                 <button
-                  onClick={() => handleNavClick(nav.id)}
+                  onClick={() => handleNavClick(nav.id, nav.route)}
                   className={`relative px-4 py-2 transition-all duration-300 font-medium group overflow-hidden rounded-lg ${
-                    activeSection === nav.id
-                      ? "text-white bg-blue-500/20 border border-blue-500/30"
+                    activeSection === nav.id || (nav.route && location.pathname === nav.route)
+                      ? "text-white bg-teal-500/20 border border-teal-500/30"
                       : "text-gray-300 hover:text-white"
                   }`}
                 >
                   <span className="relative z-10">{nav.title}</span>
                   <span
-                    className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 ${
-                      activeSection === nav.id ? "w-full" : "w-0 group-hover:w-full"
+                    className={`absolute bottom-0 left-0 h-0.5 bg-teal-500 transition-all duration-300 ${
+                      activeSection === nav.id || (nav.route && location.pathname === nav.route) ? "w-full" : "w-0 group-hover:w-full"
                     }`}
                   ></span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></span>
                 </button>
               </motion.li>
             ))}
@@ -131,13 +138,12 @@ const Navbar = () => {
                   {navLinks.map((nav, index) => (
                     <motion.li key={nav.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3, delay: index * 0.1 }}>
                       <button
-                        onClick={() => handleNavClick(nav.id)}
+                        onClick={() => handleNavClick(nav.id, nav.route)}
                         className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-300 font-medium ${
-                          activeSection === nav.id ? "text-white bg-blue-500/20 border border-blue-500/30" : "text-gray-300 hover:text-white hover:bg-white/5"
+                          activeSection === nav.id || (nav.route && location.pathname === nav.route) ? "text-white bg-teal-500/20 border border-teal-500/30" : "text-gray-300 hover:text-white hover:bg-white/5"
                         }`}
                       >
                         <span className="relative z-10">{nav.title}</span>
-                        <span className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></span>
                       </button>
                     </motion.li>
                   ))}

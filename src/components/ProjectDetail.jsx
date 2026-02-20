@@ -1,243 +1,297 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import { projects } from "../constants";
-import { scrollToSection } from "../lib/helperFunctions";
 import { AiOutlineArrowLeft, AiOutlineGithub, AiOutlineLink } from "react-icons/ai";
 
 const ProjectDetail = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const project = projects.find((p) => p.id.toString() === id);
+  const project = projects.find((p) => p.id === id);
+  const [activeSection, setActiveSection] = useState(null);
+  const [readProgress, setReadProgress] = useState(0);
 
-  useEffect(() => {
-    const prev = document.documentElement.style.scrollBehavior;
-    document.documentElement.style.scrollBehavior = "auto";
-    window.scrollTo(0, 0);
+  useLayoutEffect(() => {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
-    return () => {
-      document.documentElement.style.scrollBehavior = prev || "smooth";
+  }, [id]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const el = document.documentElement;
+      const scrollTop = el.scrollTop || document.body.scrollTop;
+      const scrollHeight = el.scrollHeight - el.clientHeight;
+      setReadProgress(scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0);
     };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Build TOC from first heading 'Project Overview' onward
   const toc = useMemo(() => {
-    if (!project) return [];
-    const items = [];
-    let headingCount = 0;
-    let started = false;
-    project.details.forEach((d) => {
-      if (d.type === "heading" || d.type === "subheading") {
-        const isOverview = typeof d.content === "string" && d.content.toLowerCase().includes("project overview");
-        if (isOverview) started = true;
-        if (!started) return;
-        headingCount += 1;
-        items.push({ level: d.type === "heading" ? 1 : 2, text: d.content, id: `sec-${headingCount}` });
-      }
-    });
-    return items;
+    if (!project?.details) return [];
+    return project.details
+      .filter((d) => d.type === "heading" || d.type === "subheading")
+      .map((d, i) => ({ id: `sec-${i}`, text: d.content, level: d.type === "heading" ? 1 : 2 }));
   }, [project]);
 
-  // Scroll spy active id
-  const [activeId, setActiveId] = useState(null);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
+        entries.forEach((e) => e.isIntersecting && setActiveSection(e.target.id));
       },
-      { rootMargin: "-120px 0px -70% 0px", threshold: [0, 1.0] }
+      { rootMargin: "-100px 0px -60% 0px", threshold: 0 }
     );
-    toc.forEach((i) => {
-      const el = document.getElementById(i.id);
+    toc.forEach(({ id }) => {
+      const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
   }, [toc]);
 
-  const waitAndScrollHome = (sectionId) => {
-    navigate("/");
-    const start = Date.now();
-    const tryScroll = () => {
-      const el = document.getElementById(sectionId);
-      if (el) {
-        scrollToSection(sectionId);
-      } else if (Date.now() - start < 2000) {
-        requestAnimationFrame(tryScroll);
-      }
-    };
-    requestAnimationFrame(tryScroll);
+  const scrollTo = (secId) => {
+    document.getElementById(secId)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center pt-24">
-        <div className="text-center bg-glass rounded-2xl p-8 border border-white/10 shadow-xl">
-          <h1 className="text-3xl font-bold mb-4 text-white">Project not found!</h1>
-          <button className="btn-primary inline-flex items-center gap-2" onClick={() => waitAndScrollHome("projects")}>
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center pt-24">
+        <div className="text-center space-y-4">
+          <div className="text-5xl mb-4">🔍</div>
+          <h1 className="text-2xl font-bold text-white">Project not found</h1>
+          <p className="text-gray-500">The project you're looking for doesn't exist.</p>
+          <Link to="/projects" className="inline-flex items-center gap-2 text-teal-400 hover:text-teal-300 transition-colors mt-2">
             <AiOutlineArrowLeft /> Back to Projects
-          </button>
+          </Link>
         </div>
       </div>
     );
   }
 
-  let headingIndex = 0;
-  const renderDetail = (detail, index) => {
-    const alignment = detail.align || "left";
-    const spacing = detail.spacing || "1.6";
-    const indentation = detail.indentation || "0";
-    const captionStyle = {
-      fontSize: detail.captionFontSize || "1rem",
-      fontStyle: detail.captionFontStyle || "normal",
-      color: detail.captionColor || "white",
-    };
-
-    switch (detail.type) {
-      case "heading": {
-        headingIndex += 1;
-        const idAttr = `sec-${headingIndex}`;
-        return (
-          <h2 id={idAttr} key={index} className="mb-6 text-gradient text-3xl font-bold">
-            {detail.content}
+  let secIdx = 0;
+  const renderBlock = (block, i) => {
+    if (block.type === "heading") {
+      const sid = `sec-${secIdx++}`;
+      return (
+        <div key={i} className="mt-14 mb-5">
+          <h2
+            id={sid}
+            className="text-2xl font-bold text-white scroll-mt-28 flex items-center gap-3"
+          >
+            <span className="w-1 h-6 rounded-full bg-teal-400 inline-block flex-shrink-0" />
+            {block.content}
           </h2>
-        );
-      }
-      case "subheading": {
-        headingIndex += 1;
-        const idAttr = `sec-${headingIndex}`;
-        return (
-          <h3 id={idAttr} key={index} className="mb-4 text-white font-semibold text-2xl">
-            {detail.content}
-          </h3>
-        );
-      }
-      case "paragraph":
-        return (
-          <p key={index} className="mb-6 text-gray-300 leading-relaxed" style={{ fontSize: detail.fontSize || "1rem", textAlign: alignment, lineHeight: spacing, textIndent: indentation }}>
-            {Array.isArray(detail.content) ? detail.content.map((part, idx) => (typeof part === "string" ? <span key={idx}>{part}</span> : part.type === "bold" ? <b key={idx} className="text-white font-semibold">{part.content}</b> : part.type === "italic" ? <i key={idx} className="text-gray-300 italic">{part.content}</i> : part.type === "underline" ? <u key={idx} className="text-white underline">{part.content}</u> : part.type === "link" ? <a key={idx} href={part.style.href} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline">{part.content}</a> : null)) : detail.content}
-          </p>
-        );
-      case "point": {
-        const points = detail.content.split(",");
-        return (
-          <ul key={index} className="mb-6 space-y-2">
-            {points.map((p, i) => (
-              <li key={i} className="flex items-start gap-3 text-gray-300">
-                <span className="w-2 h-2 bg-blue-400 rounded-full mt-2"></span>
-                <span>{p.trim()}</span>
-              </li>
-            ))}
-          </ul>
-        );
-      }
-      case "image":
-        return (
-          <div key={index} className="flex justify-center mb-8">
-            <div className="bg-glass rounded-2xl p-4 border border-white/10 shadow-xl max-w-4xl">
-              <img src={detail.src} alt={detail.alt || "Image"} className="rounded-xl w-full h-auto object-contain mx-auto" style={{ maxHeight: detail.height || "600px" }} />
-              {detail.caption && (
-                <p className="mt-4 text-gray-300 italic text-center" style={captionStyle}>
-                  {detail.caption}
-                </p>
-              )}
-            </div>
-          </div>
-        );
-      case "mediaRow":
-        return (
-          <div key={index} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {detail.content.map((item, idx) => (
-              <div key={idx} className="bg-glass rounded-2xl p-4 border border-white/10 shadow-xl">
-                {item.type === "image" ? (
-                  <img src={item.src} alt={item.alt || "Media"} className="rounded-xl w-full h-auto object-contain" style={{ maxHeight: item.height || "400px" }} />
-                ) : (
-                  <iframe width="100%" height={item.height || "220px"} src={item.src} title="Video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="rounded-xl"></iframe>
-                )}
-                {item.caption && (
-                  <p className="mt-4 text-gray-300 italic text-center" style={{ fontSize: detail.captionFontSize || "1rem" }}>
-                    {item.caption}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        );
-      default:
-        return null;
+          <div className="h-px bg-gradient-to-r from-teal-500/30 via-white/10 to-transparent mt-3" />
+        </div>
+      );
     }
-  };
-
-  const handleTocClick = (id) => {
-    const prev = document.documentElement.style.scrollBehavior;
-    document.documentElement.style.scrollBehavior = "smooth";
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    setTimeout(() => {
-      document.documentElement.style.scrollBehavior = prev || "smooth";
-    }, 500);
+    if (block.type === "subheading") {
+      const sid = `sec-${secIdx++}`;
+      return (
+        <h3
+          id={sid}
+          key={i}
+          className="text-lg font-semibold text-teal-300 mt-8 mb-3 scroll-mt-28"
+        >
+          {block.content}
+        </h3>
+      );
+    }
+    if (block.type === "paragraph") {
+      const text = Array.isArray(block.content)
+        ? block.content.map((p, j) =>
+            typeof p === "string"
+              ? p
+              : p.type === "link"
+              ? <a key={j} href={p.style?.href} target="_blank" rel="noopener noreferrer" className="text-teal-400 underline underline-offset-2 hover:text-teal-300">{p.content}</a>
+              : <strong key={j} className="text-white font-semibold">{p.content}</strong>
+          )
+        : block.content;
+      return (
+        <p key={i} className="text-gray-400 leading-7 mb-4 text-[15px]">
+          {text}
+        </p>
+      );
+    }
+    if (block.type === "point") {
+      const items = String(block.content).split(",").map((s) => s.trim()).filter(Boolean);
+      return (
+        <ul key={i} className="space-y-2 mb-5 ml-1">
+          {items.map((item, j) => (
+            <li key={j} className="flex items-start gap-2 text-gray-400 text-[15px]">
+              <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-teal-400 flex-shrink-0" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+    if (block.type === "image") {
+      return (
+        <figure key={i} className="my-8">
+          <div className="rounded-xl overflow-hidden border border-white/10 shadow-xl shadow-black/40">
+            <img
+              src={block.src}
+              alt={block.alt || ""}
+              className="w-full max-w-2xl mx-auto block"
+            />
+          </div>
+          {block.caption && (
+            <figcaption className="text-center text-sm text-gray-500 mt-3 italic">
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
+    }
+    if (block.type === "mediaRow" && Array.isArray(block.content)) {
+      return (
+        <div key={i} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-8">
+          {block.content.map((item, j) => (
+            <figure key={j} className="rounded-xl overflow-hidden border border-white/10 shadow-lg shadow-black/30">
+              {item.type === "image"
+                ? <img src={item.src} alt={item.alt || ""} className="w-full object-cover" />
+                : <iframe src={item.src} title="Video" className="w-full aspect-video" allowFullScreen />
+              }
+              {item.caption && (
+                <figcaption className="text-sm text-gray-500 px-3 py-2 bg-white/[0.03]">
+                  {item.caption}
+                </figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <div className="container mx-auto px-6 pt-24 pb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+    <div className="min-h-screen bg-slate-950">
+      {/* Reading progress bar */}
+      <div
+        className="fixed top-0 left-0 h-0.5 bg-teal-400 z-50 transition-[width] duration-150"
+        style={{ width: `${readProgress}%` }}
+      />
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-24 pb-24">
+        {/* Back navigation */}
+        <nav className="mb-10">
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-2 text-gray-500 hover:text-teal-400 transition-colors text-sm group"
+          >
+            <AiOutlineArrowLeft className="group-hover:-translate-x-0.5 transition-transform" />
+            Back to Projects
+          </Link>
+        </nav>
+
+        <article className="flex flex-col lg:flex-row lg:gap-14">
+
           {/* Main content */}
-          <main className="lg:col-span-8">
-            <div className="mb-6">
-              <button className="btn-secondary inline-flex items-center gap-2" onClick={() => waitAndScrollHome("projects")}>
-                <AiOutlineArrowLeft /> Back to Projects
-              </button>
-            </div>
-            <div className="bg-glass rounded-2xl p-6 border border-white/10 shadow-xl mb-8">
-              <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gradient">{project.title}</h1>
-              <p className="text-gray-300 mb-6 leading-relaxed">{project.content}</p>
-              <div className="flex flex-wrap gap-3 mb-4">
-                {project.stack.map((tech, idx) => (
-                  <span key={idx} className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 rounded-full text-blue-300 text-xs font-medium">
-                    {tech.name}
+          <main className="flex-1 min-w-0">
+
+            {/* Project hero card */}
+            <div className="rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02] mb-10 shadow-2xl shadow-black/40">
+              {/* Banner image */}
+              {project.image && (
+                <div className="h-52 sm:h-64 overflow-hidden bg-slate-900">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover opacity-80"
+                  />
+                </div>
+              )}
+
+              {/* Info panel */}
+              <div className="p-6 sm:p-8">
+                {project.duration && (
+                  <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-teal-500/10 border border-teal-500/20 text-teal-400 mb-4">
+                    {project.duration}
                   </span>
-                ))}
-              </div>
-              <div className="flex items-center gap-3">
-                {project.github && (
-                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-glass border border-white/10 rounded-lg hover:bg-glass-hover transition-all text-white inline-flex items-center gap-2">
-                    <AiOutlineGithub /> GitHub
-                  </a>
                 )}
-                {project.link && (
-                  <a href={project.link} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-glass border border-white/10 rounded-lg hover:bg-glass-hover transition-all text-white inline-flex items-center gap-2">
-                    <AiOutlineLink /> Live Demo
-                  </a>
-                )}
+
+                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 leading-tight">
+                  {project.title}
+                </h1>
+
+                <p className="text-gray-400 leading-relaxed mb-6 text-[15px]">
+                  {project.content}
+                </p>
+
+                {/* Tech stack */}
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {project.stack.map((t, i) => (
+                    <span
+                      key={i}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 text-xs rounded-full bg-slate-800 text-gray-300 border border-white/10 font-medium"
+                    >
+                      {t.icon && typeof t.icon !== "string" && (
+                        <t.icon className="text-teal-400 text-sm" />
+                      )}
+                      {t.name}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Links */}
+                <div className="flex flex-wrap gap-3">
+                  {project.github && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/30 text-teal-300 text-sm font-medium transition-colors"
+                    >
+                      <AiOutlineGithub className="text-base" /> GitHub
+                    </a>
+                  )}
+                  {project.link && (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-gray-300 text-sm font-medium transition-colors"
+                    >
+                      <AiOutlineLink className="text-base" /> Live / Report
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="space-y-8">{project.details.map(renderDetail)}</div>
+
+            {/* Article body */}
+            <div className="prose-custom">
+              {project.details.map(renderBlock)}
+            </div>
           </main>
-          {/* TOC Sidebar */}
-          <aside className="lg:col-span-4">
-            <div className="sticky top-24 bg-glass rounded-2xl p-6 border border-white/10 shadow-xl">
-              <h4 className="text-white font-semibold mb-4">On this page</h4>
-              <nav className="space-y-2">
-                {toc.length === 0 && <p className="text-gray-400 text-sm">No sections</p>}
-                {toc.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => handleTocClick(item.id)}
-                    className={`block text-left w-full text-sm transition-colors duration-200 ${
-                      item.level === 1 ? "pl-0" : "pl-4"
-                    } ${activeId === item.id ? "text-white" : "text-gray-400 hover:text-white"}`}
-                  >
-                    {item.text}
-                  </button>
-                ))}
+
+          {/* Sidebar TOC */}
+          {toc.length > 0 && (
+            <aside className="lg:w-56 flex-shrink-0 order-first lg:order-last">
+              <nav className="lg:sticky lg:top-28 pb-8 lg:pb-0">
+                <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-4">
+                  On this page
+                </p>
+                <ul className="space-y-0.5">
+                  {toc.map(({ id, text, level }) => (
+                    <li key={id} style={{ paddingLeft: level === 2 ? "0.875rem" : 0 }}>
+                      <button
+                        onClick={() => scrollTo(id)}
+                        className={`text-left text-sm w-full py-1.5 px-2.5 -mx-2.5 rounded-lg transition-colors duration-150 truncate block leading-snug ${
+                          activeSection === id
+                            ? "text-teal-400 font-medium bg-teal-500/10 border-l-2 border-teal-400 pl-3"
+                            : "text-gray-500 hover:text-gray-300 hover:bg-white/5"
+                        }`}
+                      >
+                        {text}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+
               </nav>
-            </div>
-          </aside>
-        </div>
+            </aside>
+          )}
+        </article>
       </div>
     </div>
   );

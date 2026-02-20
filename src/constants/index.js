@@ -115,38 +115,13 @@ export const repoLink = "https://github.com/simsondsouza";
 export const callToAction = "https://www.linkedin.com/in/simsondsouza";
 
 export const navLinks = [
-  {
-    id: "home",
-    title: "Home",
-  },
-  {
-    id: "skills",
-    title: "Skills & Experience",
-  },
-  {
-    id: "education",
-    title: "Education",
-  },
-  {
-    id: "achievements",
-    title: "Achievements",
-  },
-  {
-    id: "projects",
-    title: "Projects",
-  },
-  // {
-  //   id: "openSource",
-  //   title: "Open Source",
-  // },
-  // {
-  //   id: "extraCurricular",
-  //   title: "Extra Curricular",
-  // },
-  {
-    id: "contactMe",
-    title: "Contact Me",
-  },
+  { id: "home", title: "Home", route: null },
+  { id: "skills", title: "Skills & Experience", route: null },
+  { id: "education", title: "Education", route: null },
+  { id: "achievements", title: "Achievements", route: null },
+  { id: "projects", title: "Projects", route: "/projects" },
+  { id: "blog", title: "Blog", route: "/blog" },
+  { id: "contactMe", title: "Contact Me", route: null },
 ];
 
 // Add your past academic experiences here
@@ -1841,65 +1816,36 @@ export const projects = [
 export const blogPosts = [
   {
     id: "post-1",
-    title: "Blog Post 01 - Title",
-    link: "#",
-    date: new Date().toLocaleDateString(), // Can be edited to any string format
-    image: "https://via.placeholder.com/600/92c952",
-    tags: [
-      {
-        id: "tag-1",
-        name: "tag 01"
-      },
-      {
-        id: "tag-2",
-        name: "tag 03"
-      },
-      {
-        id: "tag-3",
-        name: "tag 03"
-      },
-    ],
-  },
-  {
-    id: "post-2",
-    title: "Blog Post 02 - Title",
-    link: "#",
-    date: new Date().toLocaleDateString(),
-    image: "https://via.placeholder.com/600/d32776",
-    tags: [
-      {
-        id: "tag-1",
-        name: "tag 01"
-      },
-      {
-        id: "tag-2",
-        name: "tag 03"
-      },
-      {
-        id: "tag-3",
-        name: "tag 03"
-      },
-    ],
-  },
-  {
-    id: "post-3",
-    title: "Blog Post 03 - Title",
-    link: "#",
-    date: new Date().toLocaleDateString(),
-    image: "https://via.placeholder.com/600/771796",
-    tags: [
-      {
-        id: "tag-1",
-        name: "tag 01"
-      },
-      {
-        id: "tag-2",
-        name: "tag 03"
-      },
-      {
-        id: "tag-3",
-        name: "tag 03"
-      },
+    slug: "what-are-neural-networks",
+    title: "What Are Neural Networks?",
+    date: "Feb 20, 2025",
+    image: "https://media.giphy.com/media/3oKIPEqDGUULpEU0aQ/giphy.gif",
+    tags: [{ id: "tag-1", name: "AI" }, { id: "tag-2", name: "Machine Learning" }, { id: "tag-3", name: "Deep Learning" }],
+    content: [
+      { type: "heading", content: "Introduction" },
+      { type: "paragraph", content: "Neural networks are computing systems inspired by the biological neural networks in animal brains. They form the backbone of modern artificial intelligence, powering everything from voice assistants to self-driving cars. In this post, we'll explore what they are, how they work, and why they've become so powerful." },
+      { type: "gif", src: "https://media.giphy.com/media/3oKIPEqDGUULpEU0aQ/giphy.gif", alt: "Neural network node graph visualization" },
+      { type: "caption", content: "Neural networks process information through layers of connected nodes, mimicking how neurons fire in the brain." },
+      { type: "heading", content: "The Basic Building Blocks" },
+      { type: "paragraph", content: "A neural network consists of layers of nodes (neurons): an input layer, one or more hidden layers, and an output layer. Each connection between nodes has a weight that gets adjusted during training. Data flows from input to output, with each node applying an activation function to produce its output. The strength of these connections determines what the network learns." },
+      { type: "gif", src: "https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif", alt: "Data flowing through neural network layers" },
+      { type: "caption", content: "Information flows forward through layers, with each neuron combining inputs and applying a non-linear function." },
+      { type: "heading", content: "How Learning Works" },
+      { type: "paragraph", content: "Neural networks learn through a process called backpropagation combined with gradient descent. When the network makes a prediction, we compare it to the correct answer and calculate the loss (error). This error is propagated backward through the network, and the weights are adjusted to reduce the error. Over many iterations (epochs), the network gets better at its task." },
+      { type: "gif", src: "https://media.giphy.com/media/26BRzozg4TCBXv6QU/giphy.gif", alt: "Gradient descent and backpropagation in a neural network" },
+      { type: "caption", content: "Training iteratively improves the model by minimizing the difference between predictions and ground truth." },
+      { type: "heading", content: "Types of Neural Networks" },
+      { type: "subheading", content: "Feedforward Networks" },
+      { type: "paragraph", content: "The simplest architecture — data flows in one direction from input to output. Great for basic classification and regression tasks." },
+      { type: "subheading", content: "Convolutional Neural Networks (CNNs)" },
+      { type: "paragraph", content: "Designed for image data. They use convolutional layers to detect spatial patterns like edges, textures, and objects. Power image recognition, medical imaging, and autonomous vehicles." },
+      { type: "subheading", content: "Recurrent Neural Networks (RNNs)" },
+      { type: "paragraph", content: "Built for sequential data — text, speech, time series. They maintain a hidden state that carries information across time steps, allowing them to model sequences." },
+      { type: "subheading", content: "Transformers" },
+      { type: "paragraph", content: "The architecture behind GPT, BERT, and modern language models. Transformers use self-attention to process sequences in parallel, making them highly scalable and effective for NLP tasks." },
+      { type: "gif", src: "https://media.giphy.com/media/3oKIPEqDGUULpEU0aQ/giphy.gif", alt: "Neural network architecture connections and weights" },
+      { type: "heading", content: "Why They Matter" },
+      { type: "paragraph", content: "Neural networks excel at finding patterns in large amounts of data. They can recognize images, translate languages, play games, drive cars, and generate human-like text. As we collect more data and build faster hardware (GPUs, TPUs), neural networks will continue to transform industries from healthcare to entertainment. Understanding their fundamentals is key to working in modern AI and robotics." },
     ],
   },
 ];
