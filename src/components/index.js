@@ -14,6 +14,7 @@ import Loading from "./Loading";
 import BlogPosts from "./BlogPosts";
 import Achievements from "./Achievements";
 import Publications from "./Publications";
+import News from "./News";
 
 
 export {
@@ -31,4 +32,5 @@ export {
     BlogPosts,
     Achievements,
     Publications,
+    News,
 };

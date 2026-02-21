@@ -51,7 +51,24 @@ const SkillCard = (props) => {
   );
 };
 
-const Content = ({ text, link }) => {
+const Content = ({ text, link, type }) => {
+  if (type === "header") {
+    return (
+      <p className="font-poppins font-semibold text-[14px] text-teal-300 mt-4 mb-0.5">
+        {text}
+      </p>
+    );
+  }
+  if (type === "bullet") {
+    return (
+      <div className="flex items-start gap-2 ml-3 mt-1">
+        <span className="mt-[5px] w-1.5 h-1.5 rounded-full bg-teal-400 flex-shrink-0" />
+        <p className="font-poppins font-normal text-[13px] text-gray-300 leading-relaxed">
+          {text}
+        </p>
+      </div>
+    );
+  }
   return (
     <div>
       <p className="font-poppins font-normal text-[14px] text-gray-300 mt-4 leading-relaxed">

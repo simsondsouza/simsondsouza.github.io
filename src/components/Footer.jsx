@@ -45,10 +45,11 @@ const Footer = () => (
         </div>
         {/* Profile Image */}
         <div className="flex justify-center lg:justify-end">
-          <div className="relative">
-            <img src={profilePic} alt="profile" className="w-[220px] h-[220px] object-cover rounded-2xl border border-white/20 shadow-2xl" />
-            <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl blur-2xl"></div>
-          </div>
+          <img
+            src={profilePic}
+            alt="profile"
+            className="w-[220px] h-auto rounded-2xl border border-white/20 shadow-2xl block"
+          />
         </div>
       </div>
       {/* Bottom bar */}
