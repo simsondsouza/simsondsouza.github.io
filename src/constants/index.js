@@ -30,6 +30,9 @@ import {
   vas_face_recognition_system_block_diagram,
   vas_lbph,
   vas_lbph_histogram,
+  ai_assistant_project,
+  lunar_roadster_project,
+  task_allocation_project,
 } from "../assets";
 
 import {
@@ -401,7 +404,7 @@ export const projects = [
     title: "Lunar ROADSTER",
     github: "https://github.com/Lunar-ROADSTER",
     link: "https://mrsdprojects.ri.cmu.edu/2025teami/",
-    image: lunar_rover,
+    image: lunar_roadster_project,
     content:
       "The Lunar Robotic Operator for Autonomous Development of Surface Trails and Exploration Routes (Lunar ROADSTER) is an autonomous moon-working rover, capable of finding exploration routes and grooming the lunar surface to develop traversable surface trails. These groomed trails will become the backbone for the colonization of the Moon by enabling transportation, logistics, and enterprise development.",
     duration: "August 2024 - Present",
@@ -1019,7 +1022,7 @@ export const projects = [
     title: "Development of Task Allocation Algorithm for Autonomous Warehouse Robots",
     github: "",
     link: "https://drive.google.com/file/d/11Txdx3U9qqhdDhpMj8O8VOb_pJnVq-mn/view?usp=sharing",
-    image: tb_burger_model,
+    image: task_allocation_project,
     content:
       "This project involves coordinating TurtleBot3 robots using a centralized controller to collect and visualize data, including a battery drain time equation. A Python-based task allocation algorithm was designed to optimize task assignments based on factors such as completion time, robot status, and battery levels.",
     duration: "June 2022 - November 2022",
@@ -1451,7 +1454,7 @@ export const projects = [
     title: "Development of Interactive Visual Recognition Assistant Bot",
     github: "",
     link: "https://ieeexplore.ieee.org/document/10084243",
-    image: vas_lbph,
+    image: ai_assistant_project,
     content:
       "A Voice Assistant System was created using Python and Natural Language Processing to understand user commands and deliver human-like responses, with features like wake word detection, news fetching, and app launching. It also integrated face recognition for personalized communication and was designed to operate seamlessly on both Windows and Linux systems, ensuring broad accessibility.",
     duration: "January 2022 - May 2022",

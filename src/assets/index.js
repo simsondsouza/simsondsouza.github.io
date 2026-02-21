@@ -41,6 +41,9 @@ import vas_block_diagram from "./vas_block_diagram.png";
 import vas_face_recognition_system_block_diagram from "./vas_face_recognition_system_block_diagram.png";
 import vas_lbph from "./vas_lbph.png";
 import vas_lbph_histogram from "./vas_lbph_histogram.png";
+import ai_assistant_project from "./ai_assistant_project.gif";
+import lunar_roadster_project from "./lunar_roadster_project.gif";
+import task_allocation_project from "./task_allocation_project.gif";
 
 export {
   aim_logo,
@@ -86,4 +89,7 @@ export {
   vas_face_recognition_system_block_diagram,
   vas_lbph,
   vas_lbph_histogram,
+  ai_assistant_project,
+  lunar_roadster_project,
+  task_allocation_project,
 };

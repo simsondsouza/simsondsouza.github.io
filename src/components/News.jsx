@@ -35,7 +35,7 @@ const newsItems = [
         >
           AIM Intelligent Machines
         </a>
-        , Redmond, WA.
+        .
       </>
     ),
   },
